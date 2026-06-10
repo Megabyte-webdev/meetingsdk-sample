@@ -1,5 +1,5 @@
 import { useMeeting, useParticipants } from "@afosecure/meetingsdk";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import RemoteVideoComponent from "./RemoteVideoComponent";
 import axios from "axios";
 import {
