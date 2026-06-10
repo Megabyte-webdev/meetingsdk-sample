@@ -1,17 +1,12 @@
 import { useState } from "react";
 import "./App.css";
-import {
-  MeetingProvider,
-  MeetingState,
-  VideoSDKCore,
-} from "@afosecure/meetingsdk";
+import { MeetingProvider, VideoSDKCore } from "@afosecure/meetingsdk";
 import VideoCallContent from "./components/VideoCallContent";
 
 function App() {
-  const [state] = useState(() => new MeetingState());
   const [core] = useState(
     () =>
-      new VideoSDKCore(state, {
+      new VideoSDKCore({
         onTrack: (_, peerId) => {
           console.log("📹 Received stream from:", peerId);
         },

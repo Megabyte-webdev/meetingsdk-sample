@@ -35,7 +35,6 @@ const IncallChat = ({
     publish({ message: text });
     setDraft("");
   };
-  console.log(messages, localParticipant);
 
   return (
     <div
@@ -114,8 +113,8 @@ const IncallChat = ({
             }}
           >
             <span style={{ fontSize: 10, color: TEXT_MUTED, marginBottom: 3 }}>
-              {msg.sender_id === localParticipant?.id ? "You" : msg.sender_id} ·{" "}
-              {new Date(msg.timestamp).toLocaleString()}
+              {msg.sender_id === localParticipant?.id ? "You" : msg.sender_name}{" "}
+              · {new Date(msg.timestamp).toLocaleTimeString()}
             </span>
             <div
               style={{

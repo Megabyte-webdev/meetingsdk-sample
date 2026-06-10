@@ -1,5 +1,5 @@
 import { useMeeting, useParticipants } from "@afosecure/meetingsdk";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import RemoteVideoComponent from "./RemoteVideoComponent";
 import axios from "axios";
 import {
@@ -23,9 +23,10 @@ const SERVER = "https://rust-video-server-sfyf.onrender.com";
 
 // ── Component
 function VideoCallContent() {
-  const { join, startLocalStream, leave, localParticipant } = useMeeting();
+  const { join, leave, startLocalStream, localParticipant } = useMeeting();
   const participants = useParticipants();
   const localVideoRef = useRef<HTMLVideoElement>(null);
+  const localStream = localParticipant?.media?.stream;
 
   const [roomId, setRoomId] = useState("");
   const [roomTitle, setRoomTitle] = useState("");
@@ -67,7 +68,16 @@ function VideoCallContent() {
     }
   };
 
-  // ── Join meeting ───────────────────────────────────────────────────────────
+  const attachLocalVideo = (video: HTMLVideoElement | null) => {
+    if (!video || !localStream) return;
+
+    video.srcObject = localStream;
+    video.playsInline = true;
+
+    video.play().catch(console.error);
+  };
+
+  // ── Join meeting
   const handleJoin = async () => {
     if (!name.trim() || !roomId.trim()) {
       setError("Please enter your name and room ID");
@@ -80,7 +90,7 @@ function VideoCallContent() {
     setError("");
     setIsJoining(true);
     try {
-      await startLocalStream(localVideoRef.current, name);
+      await startLocalStream(localVideoRef.current, name.trim());
       await join(roomId, name.trim());
       setConnected(true);
     } catch (err) {
@@ -94,7 +104,7 @@ function VideoCallContent() {
     }
   };
 
-  // ── Leave meeting ──────────────────────────────────────────────────────────
+  // ── Leave meeting
   const handleLeave = () => {
     setConnected(false);
     setName("");
@@ -111,9 +121,7 @@ function VideoCallContent() {
     });
   };
 
-  // ════════════════════════════════════════════════════════════════════════════
   // JOIN SCREEN
-  // ════════════════════════════════════════════════════════════════════════════
   if (!connected) {
     return (
       <div
@@ -131,7 +139,9 @@ function VideoCallContent() {
         <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');`}</style>
 
         {/* Always-mounted hidden video so ref is ready */}
-        <video ref={localVideoRef} autoPlay muted style={{ display: "none" }} />
+        {localVideoRef && (
+          <video ref={localVideoRef} autoPlay style={{ display: "none" }} />
+        )}
 
         <div
           style={{
@@ -341,9 +351,6 @@ function VideoCallContent() {
     );
   }
 
-  // ════════════════════════════════════════════════════════════════════════════
-  // IN-CALL SCREEN
-  // ════════════════════════════════════════════════════════════════════════════
   const totalParticipants = participants.length + 1;
 
   return (
@@ -525,9 +532,8 @@ function VideoCallContent() {
             }}
           >
             <video
-              ref={localVideoRef}
+              ref={attachLocalVideo}
               autoPlay
-              muted
               playsInline
               style={{
                 width: "100%",
