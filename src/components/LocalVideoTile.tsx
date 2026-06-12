@@ -1,5 +1,5 @@
 import type { Participant } from "@afosecure/meetingsdk";
-import { useCallback, useRef } from "react";
+import { useCallback } from "react";
 import { BG_CARD, BORDER } from "../utils/styleUtil";
 import AvatarPlaceholder from "./AvatarPlaceholder";
 
@@ -10,8 +10,6 @@ export default function LocalVideoTile({
   participant: Participant;
   attachLocalVideo: (el: HTMLVideoElement | null) => void;
 }) {
-  const lastStreamRef = useRef<MediaStream | null>(null);
-
   const videoRef = useCallback(
     (el: HTMLVideoElement | null) => {
       attachLocalVideo(el);
@@ -21,40 +19,48 @@ export default function LocalVideoTile({
       const stream = participant?.media?.stream;
       if (!stream) return;
 
-      // prevent re-mount / flicker
-      if (lastStreamRef.current === stream) return;
-      lastStreamRef.current = stream;
-
+      // ALWAYS ensure correct binding (no caching by reference)
       if (el.srcObject !== stream) {
         el.srcObject = stream;
       }
 
-      el.muted = true; // local echo prevention
+      el.muted = true;
       el.playsInline = true;
       el.autoplay = true;
 
+      // IMPORTANT: force reflow playback after cam toggle
       el.play().catch(() => {});
     },
-    [participant?.media?.stream, attachLocalVideo],
+    [
+      participant?.media?.stream,
+      participant?.media?.camEnabled,
+      attachLocalVideo,
+    ],
   );
 
   const camEnabled = !!participant?.media?.camEnabled;
 
   return (
     <div
-      className="relative w-full h-full min-h-20 rounded-xl overflow-hidden aspect-video border transition-all duration-300 group flex items-center justify-center shadow-lg"
+      className="relative w-full h-full min-h-20 rounded-xl overflow-hidden aspect-video border transition-all duration-300 flex items-center justify-center shadow-lg"
       style={{ background: BG_CARD, borderColor: BORDER }}
     >
-      {camEnabled ? (
-        <video
-          ref={videoRef}
-          autoPlay
-          playsInline
-          muted
-          className="w-full h-full object-cover scale-x-[-1]"
-        />
-      ) : (
-        <AvatarPlaceholder name={participant.name || "You"} />
+      {/* ALWAYS MOUNTED VIDEO */}
+      <video
+        ref={videoRef}
+        autoPlay
+        playsInline
+        muted
+        className={`w-full h-full object-cover scale-x-[-1] transition-opacity duration-200 ${
+          camEnabled ? "opacity-100" : "opacity-0"
+        }`}
+      />
+
+      {/* AVATAR OVERLAY ONLY */}
+      {!camEnabled && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <AvatarPlaceholder name={participant.name || "You"} />
+        </div>
       )}
 
       <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between pointer-events-none">

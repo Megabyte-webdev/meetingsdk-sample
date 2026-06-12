@@ -16,15 +16,22 @@ function RemoteVideoTile({ participant }: { participant: Participant }) {
       style={{ background: BG_CARD, borderColor: BORDER }}
     >
       {/* VIDEO */}
-      {isCamActive ? (
-        <video
-          ref={videoRef}
-          autoPlay
-          playsInline
-          className="w-full h-full object-cover"
-        />
-      ) : (
-        <AvatarPlaceholder name={name} />
+
+      <video
+        ref={videoRef}
+        autoPlay
+        playsInline
+        muted
+        className={`w-full h-full object-cover scale-x-[-1] transition-opacity duration-200 ${
+          isCamActive ? "opacity-100" : "opacity-0"
+        }`}
+      />
+
+      {/* AVATAR OVERLAY ONLY */}
+      {!isCamActive && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <AvatarPlaceholder name={participant.name || "You"} />
+        </div>
       )}
 
       {/* AUDIO (hidden but REQUIRED for playback) */}
