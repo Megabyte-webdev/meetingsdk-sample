@@ -10,6 +10,8 @@ function RemoteVideoTile({ participant }: { participant: Participant }) {
 
   const name = participant?.name || "Guest";
 
+  console.log(participant, isCamActive, isMicEnabled);
+
   return (
     <div
       className="relative w-full h-full min-h-20 rounded-xl overflow-hidden aspect-video border transition-all duration-300 group flex items-center justify-center shadow-lg"
@@ -22,8 +24,8 @@ function RemoteVideoTile({ participant }: { participant: Participant }) {
         autoPlay
         playsInline
         muted
-        className={`w-full h-full object-cover scale-x-[-1] transition-opacity duration-200 ${
-          isCamActive ? "opacity-100" : "opacity-0"
+        className={`w-full h-full object-cover transition-opacity duration-200 bg-black ${
+          isCamActive ? "opacity-100 " : "opacity-0"
         }`}
       />
 
