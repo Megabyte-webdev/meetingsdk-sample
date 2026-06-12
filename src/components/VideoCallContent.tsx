@@ -71,7 +71,7 @@ function VideoCallContent() {
 
   useEffect(() => {
     return onError((err) => {
-      if (err?.toLowerCase()?.code.includes("WS")) return;
+      if (err?.code?.toLowerCase()?.includes("WS")) return;
 
       console.log(err);
       alert(err?.message);
