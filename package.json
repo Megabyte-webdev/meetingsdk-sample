@@ -10,10 +10,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@afosecure/meetingsdk": "^1.0.2",
+    "@afosecure/meetingsdk": "^1.0.3",
+    "@tailwindcss/vite": "^4.3.0",
     "axios": "^1.16.1",
     "react": "^19.2.6",
-    "react-dom": "^19.2.6"
+    "react-dom": "^19.2.6",
+    "react-icons": "^5.6.0",
+    "tailwindcss": "^4.3.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

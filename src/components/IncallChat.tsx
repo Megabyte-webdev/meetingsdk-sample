@@ -15,7 +15,9 @@ const IncallChat = ({
   setChatOpen,
   chatOpen,
 }: {
-  setChatOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setChatOpen: React.Dispatch<
+    React.SetStateAction<"chat" | "none" | "participants">
+  >;
   chatOpen: boolean;
 }) => {
   const { localParticipant, usePubSub } = useMeeting();
@@ -38,117 +40,78 @@ const IncallChat = ({
 
   return (
     <div
-      style={{
-        width: 300,
-        flexShrink: 0,
-        background: BG_PANEL,
-        borderLeft: `1px solid ${BORDER}`,
-        display: "flex",
-        flexDirection: "column",
-      }}
+      className="w-full md:w-75 shrink-0 flex flex-col h-full"
+      style={{ background: BG_PANEL }}
     >
       {/* Chat header */}
       <div
-        style={{
-          height: 56,
-          borderBottom: `1px solid ${BORDER}`,
-          display: "flex",
-          alignItems: "center",
-          padding: "0 16px",
-          flexShrink: 0,
-        }}
+        className="hidden md:flex px-4 py-3 border-b justify-between items-center shrink-0"
+        style={{ borderColor: BORDER }}
       >
-        <span style={{ flex: 1, fontWeight: 600, fontSize: 14, color: TEXT }}>
-          In-call chat
-        </span>
+        <h3 className="m-0 text-sm font-semibold" style={{ color: TEXT }}>
+          Chat
+        </h3>
         <button
-          onClick={() => setChatOpen(false)}
-          style={{
-            background: "none",
-            border: "none",
-            color: TEXT_MUTED,
-            cursor: "pointer",
-            fontSize: 18,
-            lineHeight: 1,
-            padding: 4,
-          }}
+          onClick={() => setChatOpen("none")}
+          className="bg-transparent border-none text-xl p-0 cursor-pointer outline-none"
+          style={{ color: TEXT_MUTED }}
         >
-          ×
+          ✕
         </button>
       </div>
 
-      {/* Messages */}
-      <div
-        style={{
-          flex: 1,
-          overflowY: "auto",
-          padding: "12px 14px",
-          display: "flex",
-          flexDirection: "column",
-          gap: 10,
-        }}
-      >
+      {/* Messages Feed */}
+      <div className="flex-1 overflow-y-auto py-3 px-3.5 flex flex-col gap-2.5">
         {messages.length === 0 && (
           <p
-            style={{
-              color: TEXT_MUTED,
-              fontSize: 12,
-              textAlign: "center",
-              marginTop: 40,
-            }}
+            className="text-xs text-center mt-10"
+            style={{ color: TEXT_MUTED }}
           >
             No messages yet. Say hi!
           </p>
         )}
-        {messages.map((msg) => (
-          <div
-            key={msg.id}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems:
-                msg.sender_id === localParticipant?.id
-                  ? "flex-end"
-                  : "flex-start",
-            }}
-          >
-            <span style={{ fontSize: 10, color: TEXT_MUTED, marginBottom: 3 }}>
-              {msg.sender_id === localParticipant?.id ? "You" : msg.sender_name}{" "}
-              · {new Date(msg.timestamp).toLocaleTimeString()}
-            </span>
+
+        {messages.map((msg) => {
+          const isMe = msg.sender_id === localParticipant?.id;
+          return (
             <div
-              style={{
-                maxWidth: "85%",
-                padding: "8px 12px",
-                borderRadius:
-                  msg.sender_id === localParticipant?.id
-                    ? "12px 12px 3px 12px"
-                    : "12px 12px 12px 3px",
-                background:
-                  msg.sender_id === localParticipant?.id ? ACCENT_DIM : BG_CARD,
-                border: `1px solid ${msg.sender_id === localParticipant?.id ? "rgba(79,140,255,0.3)" : BORDER}`,
-                color: TEXT,
-                fontSize: 13,
-                lineHeight: 1.5,
-                wordBreak: "break-word",
-              }}
+              key={msg.id}
+              className={`flex flex-col ${isMe ? "items-end" : "items-start"}`}
             >
-              {msg.text}
+              <span
+                className="text-[10px] mb-0.5"
+                style={{ color: TEXT_MUTED }}
+              >
+                {isMe ? "You" : msg.sender_name} ·{" "}
+                {new Date(msg.timestamp).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </span>
+              <div
+                className={`max-w-[85%] py-2 px-3 text-[13px] leading-relaxed wrap-break-word border ${
+                  isMe
+                    ? "rounded-t-xl rounded-bl-xl rounded-br-sm"
+                    : "rounded-t-xl rounded-br-xl rounded-bl-sm"
+                }`}
+                style={{
+                  background: isMe ? ACCENT_DIM : BG_CARD,
+                  borderColor: isMe ? "rgba(79,140,255,0.3)" : BORDER,
+                  color: TEXT,
+                }}
+              >
+                {msg.text}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
         <div ref={chatEndRef} />
       </div>
 
-      {/* Chat input */}
+      {/* Chat input action bar */}
       <div
-        style={{
-          padding: "12px 14px",
-          borderTop: `1px solid ${BORDER}`,
-          display: "flex",
-          gap: 8,
-          flexShrink: 0,
-        }}
+        className="py-3 px-3.5 border-t flex gap-2 shrink-0"
+        style={{ borderColor: BORDER }}
       >
         <input
           type="text"
@@ -161,27 +124,13 @@ const IncallChat = ({
               sendMessage();
             }
           }}
-          style={{
-            ...inputStyle,
-            flex: 1,
-            padding: "9px 12px",
-            fontSize: 13,
-          }}
+          className="flex-1 py-2 px-3 text-[13px] outline-none"
+          style={{ ...inputStyle }}
         />
         <button
           onClick={sendMessage}
-          style={{
-            padding: "9px 14px",
-            background: ACCENT,
-            color: "#fff",
-            border: "none",
-            borderRadius: 10,
-            fontSize: 13,
-            fontWeight: 600,
-            cursor: "pointer",
-            fontFamily: "'DM Sans', sans-serif",
-            flexShrink: 0,
-          }}
+          className="py-2 px-3.5 rounded-[10px] text-[13px] font-semibold cursor-pointer shrink-0 text-white transition-opacity hover:opacity-90"
+          style={{ background: ACCENT, fontFamily: "'DM Sans', sans-serif" }}
         >
           ↑
         </button>
