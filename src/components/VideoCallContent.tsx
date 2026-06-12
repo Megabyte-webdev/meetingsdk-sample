@@ -71,6 +71,8 @@ function VideoCallContent() {
 
   useEffect(() => {
     return onError((err) => {
+      if (err?.toLowerCase()?.code.includes("WS")) return;
+
       console.log(err);
       alert(err?.message);
     });
@@ -199,7 +201,7 @@ function VideoCallContent() {
 
   return (
     <div
-      className="w-full h-screen flex overflow-hidden flex-col md:flex-row select-none"
+      className="w-full h-screen flex overflow-hidden flex-col md:flex-row"
       style={{
         background: BG_DEEP,
         fontFamily: "'DM Sans', sans-serif",

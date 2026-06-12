@@ -9,6 +9,12 @@ function RemoteVideoTile({ participant }: { participant: Participant }) {
   );
 
   const name = participant?.name || "Guest";
+  console.log("REMOTE MEDIA STATE", {
+    id: participant.id,
+    camEnabled: participant?.media?.camEnabled,
+    stream: participant?.media?.stream,
+    cameraTrack: participant?.media?.cameraTrack,
+  });
 
   return (
     <div
