@@ -23,7 +23,6 @@ export default function VideoGrid({
 }: VideoGridProps) {
   const stageVideoRef = useRef<HTMLVideoElement>(null);
 
-  // 1. Identify the presenter and isolate their screen sharing assets
   const isLocalPresenting = !!(
     localParticipant && presenterId === localParticipant.id
   );
@@ -32,29 +31,21 @@ export default function VideoGrid({
     : remoteParticipants.find((p) => p.id === presenterId);
 
   const hasActivePresenter = !!presenterId && !!activePresenter;
-  console.log("activePresenter", activePresenter);
 
-  // Safely grab either the full stream or fallback to a raw video track layer
   const sharedStream = activePresenter?.media?.screenStream;
   const sharedTrack = (activePresenter?.media as any)?.screenTrack;
 
-  // 2. Bind the screen share media securely with safety checks
   useEffect(() => {
     const videoEl = stageVideoRef.current;
     if (!videoEl || !hasActivePresenter) return;
 
-    // 1. Check exactly what track the DOM is currently rendering
     const currentStream = videoEl.srcObject as MediaStream | null;
     const currentTrack = currentStream?.getVideoTracks()[0];
 
-    // 2. We only care if we have a valid video track to show
     if (sharedTrack && sharedTrack.kind === "video") {
-      // 3. If the DOM doesn't have this exact track playing, force a re-bind
       if (!currentTrack || currentTrack.id !== sharedTrack.id) {
-        // Constructing a new stream guarantees the browser initiates the new video pipeline
         const newStream = new MediaStream([sharedTrack]);
 
-        // Re-attach screen audio if it came with the payload
         const audioTrack = sharedStream?.getAudioTracks()[0];
         if (audioTrack) {
           newStream.addTrack(audioTrack);
@@ -66,13 +57,11 @@ export default function VideoGrid({
       videoEl.srcObject = null;
     }
 
-    // Trigger video playback immediately
     videoEl.play().catch((err) => {
       console.warn("Screen share stage autoplay fallback invoked:", err);
     });
   }, [sharedTrack, sharedStream, hasActivePresenter]);
 
-  // 3. Assemble full participant registry for the layout viewports
   const allParticipants: GridParticipant[] = [
     ...(localParticipant ? [{ ...localParticipant, isLocal: true }] : []),
     ...remoteParticipants,
@@ -81,7 +70,6 @@ export default function VideoGrid({
   const totalFeeds = allParticipants.length;
   const isAlone = totalFeeds <= 1;
 
-  // Grid classes strictly handled when NO presentation is active
   const getStandardGridClass = () => {
     if (isAlone) return "grid-cols-1 w-full h-full max-w-none";
     if (totalFeeds === 2)
@@ -122,7 +110,6 @@ export default function VideoGrid({
         }`}
       >
         {hasActivePresenter ? (
-          /* PRESENTATION FLEX STRIP: Completely bypasses grid to eliminate squashing entirely */
           <div className="flex flex-row lg:flex-col gap-3 h-full w-full items-center lg:items-start lg:h-auto">
             {allParticipants.map((participant, index) => {
               const elementKey = participant.isLocal
@@ -146,7 +133,6 @@ export default function VideoGrid({
             })}
           </div>
         ) : (
-          /* STANDARD CALL GRID: Standard operational view */
           <div
             className={`grid gap-3 md:gap-4 items-center justify-center ${getStandardGridClass()} ${
               isAlone

@@ -177,6 +177,11 @@ function VideoCallContent() {
   const toggleChat = () => {
     setActiveSidebar((prev) => (prev === "chat" ? "none" : "chat"));
   };
+  const togglePartcipant = () => {
+    setActiveSidebar((prev) =>
+      prev === "participants" ? "none" : "participants",
+    );
+  };
 
   if (!connected) {
     return (
@@ -222,10 +227,10 @@ function VideoCallContent() {
           chatOpen={chatOpen}
           unread={unread}
           toggleChat={toggleChat}
+          togglePartcipant={togglePartcipant}
           handleLeave={handleLeave}
           isScreenSharing={isLocalSharing}
           onToggleScreenShare={handleToggleScreenShare}
-          // Pass new control bindings to the action panel layout
           micEnabled={isMicEnabled}
           camEnabled={isCamEnabled}
           onToggleMic={toggleMic}

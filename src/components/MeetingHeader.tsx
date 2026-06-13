@@ -1,4 +1,3 @@
-import { FiUsers } from "react-icons/fi";
 import {
   ACCENT,
   ACCENT_DIM,
@@ -9,6 +8,15 @@ import {
   TEXT,
   TEXT_MUTED,
 } from "../utils/styleUtil";
+import {
+  FiUsers,
+  FiMic,
+  FiMicOff,
+  FiVideo,
+  FiVideoOff,
+  FiMonitor,
+  FiMessageCircle,
+} from "react-icons/fi";
 
 interface MeetingHeaderProps {
   roomTitle: string;
@@ -17,6 +25,7 @@ interface MeetingHeaderProps {
   chatOpen: boolean;
   unread: number;
   toggleChat: () => void;
+  togglePartcipant: () => void;
   handleLeave: () => void;
   isScreenSharing: boolean;
   onToggleScreenShare: () => void;
@@ -40,6 +49,7 @@ export default function MeetingHeader({
   camEnabled,
   onToggleMic,
   onToggleCam,
+  togglePartcipant,
 }: MeetingHeaderProps) {
   return (
     <div
@@ -78,7 +88,8 @@ export default function MeetingHeader({
 
       {/* Participant Counter */}
       <div
-        className="flex items-center gap-1.5 p-2 md:px-3.5 md:py-1.5 rounded-full text-[11px] md:text-xs shrink-0 ml-auto md:ml-0"
+        onClick={togglePartcipant}
+        className="cursor-pointer flex items-center gap-1.5 p-2 md:px-3.5 md:py-1.5 rounded-full text-[11px] md:text-xs shrink-0 ml-auto md:ml-0"
         style={{
           background: BG_CARD,
           border: `1px solid ${BORDER}`,
@@ -94,7 +105,7 @@ export default function MeetingHeader({
 
       {/* ─── MICROPHONE TOGGLE BUTTON ─── */}
       <button
-        onClick={() => onToggleMic(!micEnabled)} // Passes the inverted next-state value
+        onClick={() => onToggleMic(!micEnabled)}
         className="p-2 md:px-3.5 md:py-1.5 rounded-lg cursor-pointer shrink-0 transition-colors border flex items-center justify-center"
         title={micEnabled ? "Mute Mic" : "Unmute Mic"}
         style={{
@@ -103,38 +114,12 @@ export default function MeetingHeader({
           borderColor: micEnabled ? BORDER : "rgba(239, 68, 68, 0.25)",
         }}
       >
-        <svg
-          width="15"
-          height="15"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          {micEnabled ? (
-            <>
-              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
-              <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-              <line x1="12" y1="19" x2="12" y2="23" />
-              <line x1="8" y1="23" x2="16" y2="23" />
-            </>
-          ) : (
-            <>
-              <line x1="1" y1="1" x2="23" y2="23" />
-              <path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6" />
-              <path d="M17 11a7 7 0 0 1-12 5" />
-              <line x1="12" y1="19" x2="12" y2="23" />
-              <line x1="8" y1="23" x2="16" y2="23" />
-            </>
-          )}
-        </svg>
+        {micEnabled ? <FiMic size={15} /> : <FiMicOff size={15} />}
       </button>
 
       {/* ─── CAMERA TOGGLE BUTTON ─── */}
       <button
-        onClick={() => onToggleCam(!camEnabled)} // Passes the inverted next-state value
+        onClick={() => onToggleCam(!camEnabled)}
         className="p-2 md:px-3.5 md:py-1.5 rounded-lg cursor-pointer shrink-0 transition-colors border flex items-center justify-center"
         title={camEnabled ? "Disable Camera" : "Enable Camera"}
         style={{
@@ -143,29 +128,7 @@ export default function MeetingHeader({
           borderColor: camEnabled ? BORDER : "rgba(239, 68, 68, 0.25)",
         }}
       >
-        <svg
-          width="15"
-          height="15"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          {camEnabled ? (
-            <>
-              <path d="M23 7l-7 5 7 5V7z" />
-              <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
-            </>
-          ) : (
-            <>
-              <path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2m5.66 0H14a2 2 0 0 1 2 2v3.34" />
-              <path d="M23 7l-7 5 7 5V7z" />
-              <line x1="1" y1="1" x2="23" y2="23" />
-            </>
-          )}
-        </svg>
+        {camEnabled ? <FiVideo size={15} /> : <FiVideoOff size={15} />}
       </button>
 
       {/* SCREEN SHARE ACTION BUTTON */}
@@ -178,20 +141,7 @@ export default function MeetingHeader({
           border: `1px solid ${isScreenSharing ? "rgba(34, 197, 94, 0.25)" : BORDER}`,
         }}
       >
-        <svg
-          width="12"
-          height="12"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <rect x="2" y="3" width="20" height="14" rx="2" />
-          <line x1="8" y1="21" x2="16" y2="21" />
-          <line x1="12" y1="17" x2="12" y2="21" />
-        </svg>
+        <FiMonitor size={12} />
         <span className="hidden sm:inline">
           {isScreenSharing ? "Sharing" : "Share"}
         </span>
@@ -200,14 +150,17 @@ export default function MeetingHeader({
       {/* Chat Action Button */}
       <button
         onClick={toggleChat}
-        className="relative px-3 py-1 md:px-3.5 md:py-1.5 rounded-lg text-xs md:text-13 font-medium cursor-pointer shrink-0 transition-colors"
+        className="relative px-3 py-1 md:px-3.5 md:py-1.5 rounded-lg text-xs md:text-13 font-medium cursor-pointer shrink-0 transition-colors flex items-center gap-2"
         style={{
           background: chatOpen ? ACCENT_DIM : BG_CARD,
           color: chatOpen ? ACCENT : TEXT_MUTED,
           border: `1px solid ${chatOpen ? ACCENT_DIM : BORDER}`,
         }}
       >
-        Chat
+        <FiMessageCircle size={14} />
+
+        <span className="hidden sm:inline">Chat</span>
+
         {unread > 0 && !chatOpen && (
           <span
             className="absolute -top-1 -right-1 w-4 h-4 rounded-full text-[9px] font-bold flex items-center justify-center animate-pulse"
