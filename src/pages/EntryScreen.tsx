@@ -38,7 +38,7 @@ export default function EntryScreen({
 }: EntryScreenProps) {
   return (
     <div
-      className="w-full min-h-screen flex flex-col items-center justify-center p-4 md:p-8 select-none"
+      className="w-full h-full overflow-y-auto flex flex-col items-center justify-center p-4 md:p-8"
       style={{ background: BG_DEEP, fontFamily: "'DM Sans', sans-serif" }}
     >
       <div className="w-full max-w-4xl flex flex-col gap-6">

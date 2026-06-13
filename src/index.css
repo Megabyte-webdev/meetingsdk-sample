@@ -4,10 +4,6 @@ body {
   width: 100vw;
   height: 100vh;
 }
-body {
-  position: fixed;
-  width: 100%;
-}
 
 /* Orange-themed scrollbar */
 ::-webkit-scrollbar {
