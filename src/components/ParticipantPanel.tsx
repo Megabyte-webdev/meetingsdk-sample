@@ -55,12 +55,9 @@ export default function ParticipantPanel({
         {allParticipants.map((participant, index) => {
           // Adjust these property accessors depending on your exact @afosecure/meetingsdk type definitions
           const name = participant.name || "Unknown Participant";
-          const isMicOn = (participant as any).micOn ?? false;
-          const isCamOn =
-            (participant as any).webcamOn ??
-            (participant as any).videoOn ??
-            false;
-          const isLocal = (participant as any).isLocal ?? false;
+          const isMicOn = participant?.media?.micEnabled ?? false;
+          const isCamOn = participant?.media?.camEnabled ?? false;
+          const isLocal = (participant as any)?.isLocal ?? false;
 
           return (
             <div
