@@ -35,6 +35,7 @@ function VideoCallContent() {
     toggleMic,
     toggleCam,
     onError,
+    room,
   } = useMeeting();
 
   const participants = useParticipants();
@@ -148,6 +149,7 @@ function VideoCallContent() {
     }
     setError("");
     setIsJoining(true);
+    setRoomId(roomId.trim());
     try {
       await join({ roomId: roomId.trim(), name: name.trim() });
       setConnected(true);
@@ -190,7 +192,7 @@ function VideoCallContent() {
         setName={setName}
         roomId={roomId}
         setRoomId={setRoomId}
-        roomTitle={roomTitle}
+        roomTitle={room.name || roomTitle}
         setRoomTitle={setRoomTitle}
         error={error}
         isJoining={isJoining}
@@ -221,7 +223,7 @@ function VideoCallContent() {
       {/* Main Container Layer (Header + Stream viewports) */}
       <div className="flex-1 flex flex-col min-w-0 w-full md:w-auto">
         <MeetingHeader
-          roomTitle={roomTitle}
+          roomTitle={room.name || roomTitle}
           roomId={roomId}
           totalParticipants={totalParticipants}
           chatOpen={chatOpen}

@@ -51,6 +51,8 @@ export default function MeetingHeader({
   onToggleCam,
   togglePartcipant,
 }: MeetingHeaderProps) {
+  console.log(roomTitle);
+
   return (
     <div
       className="w-full flex items-center h-12 md:h-14 px-3 md:px-5 gap-2 md:gap-3 shrink-0 flex-nowrap"
@@ -71,16 +73,18 @@ export default function MeetingHeader({
       </div>
 
       {/* Room Title & ID */}
-      <div className="hidden md:block flex-1 min-w-0">
+      <div className="flex-1 min-w-0">
         <div
           className="text-sm font-semibold truncate leading-none"
           style={{ color: TEXT }}
+          title={roomTitle || "Defcomm"}
         >
-          {roomTitle || "Meeting"}
+          {roomTitle || "Defcomm"}
         </div>
         <div
           className="text-[11px] mt-0.5 truncate font-mono"
           style={{ color: TEXT_MUTED }}
+          title={roomId}
         >
           {roomId}
         </div>

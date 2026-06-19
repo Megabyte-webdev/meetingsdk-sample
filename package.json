@@ -10,7 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@afosecure/meetingsdk": "^1.1.5",
     "@tailwindcss/vite": "^4.3.0",
     "axios": "^1.16.1",
     "react": "^19.2.6",
