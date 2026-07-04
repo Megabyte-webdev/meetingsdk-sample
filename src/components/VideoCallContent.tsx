@@ -192,7 +192,7 @@ function VideoCallContent() {
         setName={setName}
         roomId={roomId}
         setRoomId={setRoomId}
-        roomTitle={room.name || roomTitle}
+        roomTitle={roomTitle}
         setRoomTitle={setRoomTitle}
         error={error}
         isJoining={isJoining}
@@ -223,7 +223,7 @@ function VideoCallContent() {
       {/* Main Container Layer (Header + Stream viewports) */}
       <div className="flex-1 flex flex-col min-w-0 w-full md:w-auto">
         <MeetingHeader
-          roomTitle={room.name || roomTitle}
+          roomTitle={roomTitle}
           roomId={roomId}
           totalParticipants={totalParticipants}
           chatOpen={chatOpen}

@@ -95,7 +95,7 @@ export default function VideoGrid({
           />
           <div className="absolute bottom-3 left-3 px-2.5 py-1 text-[11px] bg-black/80 backdrop-blur-md rounded font-mono text-neutral-300 tracking-wide border border-white/10 uppercase shadow-md z-10">
             {isLocalPresenting
-              ? "Your Screen"
+              ? "You are presenting"
               : `Presentation: ${activePresenter?.name}`}
           </div>
         </div>

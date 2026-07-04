@@ -123,7 +123,10 @@ export default function EntryScreen({
                   type="text"
                   placeholder="e.g., Tactical Briefing Alpha"
                   value={roomTitle}
-                  onChange={(e) => setRoomTitle(e.target.value)}
+                  onChange={(e) => {
+                    console.log("changing room title:", e.target.value);
+                    setRoomTitle(e.target.value);
+                  }}
                   className="w-full h-10 px-3 text-sm rounded-lg bg-black/20 border outline-none focus:border-opacity-100 transition-all placeholder:text-neutral-600 font-medium"
                   style={{ borderColor: BORDER, color: TEXT }}
                 />
