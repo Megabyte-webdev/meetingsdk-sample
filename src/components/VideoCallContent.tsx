@@ -6,7 +6,6 @@ import {
   useLocalParticipant,
 } from "@afosecure/meetingsdk";
 
-// Styling assets
 import {
   BG_DEEP,
   BG_PANEL,
@@ -24,7 +23,6 @@ const USER_ID = "37d6faf5-718f-4766-a9ab-aa1a4a05005a";
 const SERVER = "https://rust-video-server-sfyf.onrender.com";
 
 function VideoCallContent() {
-  // Destructure toggle pipeline methods directly from the Core Meeting Context
   const {
     join,
     leave,
@@ -35,7 +33,6 @@ function VideoCallContent() {
     toggleMic,
     toggleCam,
     onError,
-    room,
   } = useMeeting();
 
   const participants = useParticipants();
