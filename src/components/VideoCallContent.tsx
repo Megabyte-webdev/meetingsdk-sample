@@ -20,7 +20,7 @@ import IncallChat from "./IncallChat";
 import ParticipantPanel from "./ParticipantPanel";
 
 const USER_ID = "37d6faf5-718f-4766-a9ab-aa1a4a05005a";
-const SERVER = "https://rust-video-server-sfyf.onrender.com";
+const SERVER = "http://localhost:8080/api";
 
 function VideoCallContent() {
   const {
